@@ -1,0 +1,27 @@
+/* PlaylistInfo.module.css */
+
+.infoContainer {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  
+  .progressBarContainer {
+    margin-top: 10px;
+  }
+  
+  .progressBar {
+    width: 100%;
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 4px;
+  }
+  
+  .progress {
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
