@@ -1,30 +1,58 @@
-/* App.module.css */
-*{
-  font-family: 'Roboto Mono', monospace; 
+* {
+  font-family: 'Roboto Mono', monospace;
   font-size: small;
   word-spacing: -1px;
+
+}
+
+.parent {
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Ensure relative positioning for child elements */
 }
 
 .container {
   position: relative;
   z-index: 1;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   max-width: 600px;
   margin: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px); /* Apply blur effect */
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+.sidePanel {
+  width: 300px;
+  padding: 20px;
+  background-color: #333;
+  color: white;
+}
+
+.sidePanel h2 {
+  margin-top: 0;
+}
+
+.sidePanel textarea {
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+}
+
 .header {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 20px;
   color: white;
   font-weight: 900;
-  font-family: 'Roboto Mono', monospace; /* Corrected to 'Roboto Mono' */
 }
 
 .formContainer,
@@ -40,4 +68,46 @@
   width: 100%;
   height: 100%;
   z-index: -1;
+}
+
+.notesPanel {
+  position: fixed;
+  top: 0;
+  right: -400px; /* Initially hidden */
+  width: 300px;
+  height: 100vh;
+  margin: 10px;
+  border-radius: 10px;
+  padding: 20px;
+  background: rgba(101, 98, 98, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  transition: right 0.3s ease;
+}
+
+.notesPanel.show {
+  right: -100px;
+}
+
+.notesPanel h2 {
+  margin-top: 0;
+}
+
+.notesPanel textarea {
+  width: 100%;
+  height: calc(100% - 40px);
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.toggleButton {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 2; /* Ensure the button is above other elements */
 }
