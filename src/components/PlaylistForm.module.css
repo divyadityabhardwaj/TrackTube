@@ -1,0 +1,29 @@
+/* .form {
+
+
+    height: 10vh;
+    width: 100vh;
+    margin: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+
+    color: rgb(33, 39, 72);
+} */
+
+
+.form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    color: white;
+  }
+  

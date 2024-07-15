@@ -4,6 +4,7 @@ import PlaylistForm from './components/PlaylistForm';
 import PlaylistInfo from './components/PlaylistInfo';
 import VideoList from './components/VideoList';
 import styles from './App.module.css';
+import Spline from '@splinetool/react-spline';
 
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
@@ -79,12 +80,12 @@ const App = () => {
     return videoDetails.flat();
   };
 
-  const parseDuration = (duration) => {
+  const parseDurationInSeconds = (duration) => {
     const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-    const hours = parseInt(match[1]) || 0;
-    const minutes = parseInt(match[2]) || 0;
-    const seconds = parseInt(match[3]) || 0;
-    return (hours * 3600) + (minutes * 60) + seconds;
+    let hours = parseInt(match[1]) || 0;
+    let minutes = parseInt(match[2]) || 0;
+    let seconds = parseInt(match[3]) || 0;
+    return hours * 3600 + minutes * 60 + seconds;
   };
 
   const secondsToHMS = (seconds) => {
@@ -95,7 +96,7 @@ const App = () => {
   };
 
   const formatVideoDuration = (title, duration) => {
-    const totalSeconds = parseDuration(duration);
+    const totalSeconds = parseDurationInSeconds(duration);
     const formattedTime = secondsToHMS(totalSeconds);
     return `${title} (${formattedTime})`;
   };
@@ -109,7 +110,7 @@ const App = () => {
         const videoDetails = await fetchVideoDetails(videoIds);
 
         const totalLengthSeconds = videoDetails.reduce((total, video) => {
-          return total + parseDuration(video.contentDetails.duration);
+          return total + parseDurationInSeconds(video.contentDetails.duration);
         }, 0);
 
         setPlaylistInfo({
@@ -120,7 +121,7 @@ const App = () => {
             duration: video.contentDetails.duration,
           })),
         });
-        setWatchedVideos(new Set());
+        setWatchedVideos(new Set()); // Reset watched videos
       } catch (error) {
         console.error('Error fetching playlist info:', error);
       }
@@ -140,8 +141,26 @@ const App = () => {
   };
 
   const calculateProgress = () => {
-    if (!playlistInfo) return 0;
-    return (watchedVideos.size / playlistInfo.totalVideos) * 100;
+    if (!playlistInfo || watchedVideos.size === 0) return 0;
+
+    // Calculate total duration of all videos in seconds
+    const totalPlaylistSeconds = playlistInfo.videos.reduce((total, video) => {
+      return total + parseDurationInSeconds(video.duration);
+    }, 0);
+
+    // Calculate duration of watched videos in seconds
+    const watchedSeconds = Array.from(watchedVideos).reduce((totalSeconds, title) => {
+      const video = playlistInfo.videos.find(v => v.title === title);
+      if (video) {
+        return totalSeconds + parseDurationInSeconds(video.duration);
+      }
+      return totalSeconds;
+    }, 0);
+
+    // Calculate progress percentage
+    const progress = (watchedSeconds / totalPlaylistSeconds) * 100;
+
+    return progress;
   };
 
   const handleToggleHighlight = (title) => {
@@ -162,37 +181,46 @@ const App = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.header}>TrackTube</h1>
-      <div className={styles.formContainer}>
-        <PlaylistForm
-          playlistUrl={playlistUrl}
-          setPlaylistUrl={setPlaylistUrl}
-          handleSubmit={handleSubmit}
-        />
+    <>
+      <Spline className={styles.background} scene="https://prod.spline.design/bv-dVEpNeSyp134a/scene.splinecode" />
+      <div className={styles.container}>
+        <h1 className={styles.header}>TrackTube</h1>
+        <div className={styles.formContainer}>
+          <PlaylistForm
+            playlistUrl={playlistUrl}
+            setPlaylistUrl={setPlaylistUrl}
+            handleSubmit={handleSubmit}
+          />
+        </div>
+        {playlistInfo && (
+          <>
+            <div className={styles.infoContainer}>
+              <PlaylistInfo
+                playlistInfo={playlistInfo}
+                handleWatchedChange={handleWatchedChange}
+                calculateProgress={calculateProgress}
+                secondsToHMS={secondsToHMS}
+                formatVideoDuration={formatVideoDuration}
+              />
+              <div className={styles.progressBarWrapper}>
+                <div
+                  className={styles.progressBar}
+                  style={{ width: `${calculateProgress()}%` }}
+                ></div>
+              </div>
+            </div>
+            <div className={styles.videoListContainer}>
+              <VideoList
+                videos={playlistInfo.videos}
+                handleWatchedChange={handleWatchedChange}
+                formatVideoDuration={formatVideoDuration}
+                onToggleHighlight={handleToggleHighlight} 
+              />
+            </div>
+          </>
+        )}
       </div>
-      {playlistInfo && (
-        <>
-          <div className={styles.infoContainer}>
-            <PlaylistInfo
-              playlistInfo={playlistInfo}
-              handleWatchedChange={handleWatchedChange}
-              calculateProgress={calculateProgress}
-              secondsToHMS={secondsToHMS}
-              formatVideoDuration={formatVideoDuration}
-            />
-          </div>
-          <div className={styles.videoListContainer}>
-            <VideoList
-              videos={playlistInfo.videos}
-              handleWatchedChange={handleWatchedChange}
-              formatVideoDuration={formatVideoDuration}
-              onToggleHighlight={handleToggleHighlight} 
-            />
-          </div>
-        </>
-      )}
-    </div>
+    </>
   );
 };
 

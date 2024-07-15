@@ -1,32 +1,31 @@
 /* VideoList.module.css */
 .videoContainer {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .videoItem {
-    margin-right: 20px;
-    margin-bottom: 10px;
-    max-width: 300px; /* Adjust max-width as needed */
-  }
-  
-  .videoContainer h3 {
-    width: 100%;
-    margin-bottom: 10px; /* Optional: Adjust margin as needed */
-  }
+  display: flex;
+  flex-wrap: wrap;
+}
 
 .videoItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-right: 20px;
   margin-bottom: 10px;
-  padding: 10px;
+  padding-right: 30px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+  font-size: 18px;
+  max-width: 250px;
+  color: white;
 }
 
 .videoItem.highlighted {
-  background-color: yellow;
+  background-color: rgb(62, 59, 99);
+}
+
+.videoContainer h3 {
+  width: 100%;
+  margin-bottom: 10px;
+  color: white  ;
 }
 
 .actionButton {
@@ -56,4 +55,14 @@
   background-color: #4caf50;
   border-radius: 4px;
   transition: width 0.3s ease;
+}
+
+.markButton {
+  cursor: pointer;
+  margin-right: 10px;
+  transition: transform 0.2s;
+}
+
+.markButton:hover {
+  transform: scale(1.1);
 }
